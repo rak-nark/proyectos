@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="carrito-container">
+        <h1>Carrito de Compras</h1>
+
+        {% if carrito_items %}
+            <div class="tabla-carrito">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in carrito_items %}
+                            <tr class="product-row">
+                                <td>{{ item[0] }}</td> <!-- Nombre del producto -->
+                                <td class="price" data-price="{{ item[2] }}">{{ item[2] | int }}</td> <!-- Precio -->
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        class="input-cantidad" 
+                                        value="{{ item[3] }}" 
+                                        min="1" 
+                                        data-product-id="{{ loop.index0 }}">
+                                </td>
+                                <td class="total">{{ item[2] * item[3] | int }}</td> <!-- Total por producto -->
+                                <td><img src="{{ url_for('static', filename='image/' + item[4]) }}" alt="{{ item[0] }}" class="imagen-producto"></td>
+                                <td>
+                                    <button class="btn-eliminar" data-product-id="{{ loop.index0 }}">Eliminar</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-carrito">
+                <h3>Total: <span id="total-compra">{{ total }}</span> COP</h3> <!-- Total de la compra -->
+                <form method="POST">
+                    <button type="submit" class="btn-finalizar-compra">Finalizar Compra</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Tu carrito está vacío.</p>
+        {% endif %}
+
+        <div class="enlaces-carrito">
+            <a href="{{ url_for('tienda') }}" class="btn-volver">Volver a la tienda</a>
+            <a href="{{ url_for('logout') }}" class="btn-cerrar-sesion">Cerrar sesión</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='javascript/carrito.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
